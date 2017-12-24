@@ -15,7 +15,7 @@ var express         = require('express'),
     var topicRoutes = require('./routes/topics'),
         authRoutes  = require('./routes/index')
 
-mongoose.connect('mongodb://localhost/voting-app',{useMongoClient: true});
+mongoose.connect(process.env.DBURL,{useMongoClient: true});
 
 mongoose.Promise = global.Promise;
 app.use(bodyParser.urlencoded({extended:true}));
