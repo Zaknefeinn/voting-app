@@ -1,0 +1,102 @@
+<% include ../partials/header %>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js'></script>
+<!--Facebook Button Script -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.11';
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>
+
+
+<div class='container vote-con'>
+    <div class='jumbotron'>
+        <div class="row">
+            <div class="col-sm-6 left">
+            <div class="col-sm-12"><h1><%= topics.name %></h1></div>
+            <form action="/topic/<%=topics._id %>/vote?_method=PUT" method="POST">
+                <select id="selectpicker" name="topic">
+                    <% topics.options.forEach(function(options){ %>
+                        <div class="col-sm-12 opt">
+                            <option><%= options.option %></option>
+                        </div> 
+                    <% }) %>
+                    <% if(currentUser){ %>
+                    <option value='addNew'>Add New</option>
+                    <% } %>
+                </select> 
+                <button class="btn btn-primary" id="voteSub">Vote!</button>
+                </form>
+        
+            <div id="add-new" style="display:none">
+                <form action="/topic/<%= topics._id %>?_method=PUT" method="POST">
+                    <input type="text" name="topic[option]" id="newInp">
+                    <button class="btn btn-success">Add!</button>
+                </form>
+            </div>
+            <% if(currentUser && topics.author.id.equals(currentUser._id)){ %>
+            <form class="delete-form" action="/topic/<%= topics._id %>?_method=DELETE" method="POST">
+                    <button class="btn btn-danger">Delete</button>
+            </form>
+            <% } %>
+            <div class="fb-container">
+                <div class="fb-share-button" data-layout="button" data-size="large" data-mobile-iframe="true">
+                    <a class="fb-xfbml-parse-ignore" target="_blank" href="">
+                        Share
+                    </a>
+                </div>   
+            </div>
+
+            </div>
+                <div class="col-sm-6">
+                    <canvas id="myChart" width="400" height="400"></canvas>
+                </div>
+            </div>
+    </div>
+</div>    
+<% include ../partials/footer %> 
+
+<script>
+    $('#submitVote').click(function(){
+        var vote = $('#selectpicker').find(':selected');
+        console.log(vote)
+    });
+    $("#selectpicker").change(function() {
+         var addNew = $('#selectpicker').find(":selected").text();
+         var checkVisibility = $('#add-new').is(":hidden");
+         if(addNew == 'Add New' && checkVisibility){
+              $("#add-new").show(); 
+         } else {
+             $('#add-new').hide();
+         }
+});
+
+var data = {
+    datasets: [{
+        data: [],
+        backgroundColor: [
+            'rgba(255, 0, 0, 0.8)',
+            'rgba(0, 255, 0, 0.3)',
+            'rgba(0, 0, 255, 0.3)',
+            'rgba(255,255,0, 0.8)',
+            'rgba(255,0,255, 0.3)',
+            'rgba(192,192,192,0.3)'
+            ]
+    }],
+    labels: []
+};
+   <% topics.options.forEach(function(options){%>
+        data.labels.push('<%= options.option %>');
+        data.datasets[0].data.push(<%= options.votes %>);
+   <% }) %>
+   
+var ctx = $('#myChart');
+var myDoughnutChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: data,
+});
+
+</script>

@@ -1,0 +1,42 @@
+<% include ../partials/header %>
+
+
+
+<div class='jumbotron container-fluid poll'>
+        <div class='container-fluid butn'>
+            <a href="/new" class="btn btn-primary add-topic">Add New topic!</a>
+        </div>
+</div> 
+
+
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Poll</th>
+                <th>Total Votes</th>
+            </tr>
+        </thead>
+        <tbody>
+                <% topics.forEach(function(topic){ %>
+                    <% var votes = [] %>
+            <tr>
+                <td><a href="/topic/<%= topic._id %>"><%= topic.name %></a></td>
+                    <% topic.options.forEach(function(top){ %>
+                        <% votes.push(top.votes) })  %>
+                        <% function getSum(total, num) {return total + num} %>
+                <td><%=votes.reduce(getSum)%></td>
+                        <%votes=[]%>
+                 <% if(currentUser && topic.author.id.equals(currentUser._id)){ %>
+                     <td>Owned</td>
+                <% } else { %>
+                    <td></td>
+                    <% } %>
+            </tr>
+            <% }); %>    
+        </tbody>
+    </table>
+</div>
+
+   
+<% include ../partials/footer %> 
