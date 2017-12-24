@@ -13,7 +13,7 @@ var express         = require('express'),
 
 
     var topicRoutes = require('./routes/topics'),
-        authRoutes  = require('./routes/index')
+        authRoutes  = require('./routes/index');
 
 mongoose.connect(process.env.DBURL,{useMongoClient: true});
 
