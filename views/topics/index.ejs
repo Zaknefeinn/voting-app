@@ -23,7 +23,8 @@
             <tr>
                 <td><a href="/topic/<%= topic._id %>"><%= topic.name %></a></td>
                     <% topic.options.forEach(function(top){ %>
-                        <% votes.push(top.votes) })  %>
+                        <%if(isNaN(top.votes)){top.votes=0}else{%>
+                        <% votes.push(top.votes) }})  %>
                         <% function getSum(total, num) {return total + num} %>
                 <td><%=votes.reduce(getSum)%></td>
                         <%votes=[]%>

@@ -29,7 +29,10 @@ body{
  }
  .jumbotron {
      height: 80%;
-     background-image: url('../image/landing.jpg')
+     background-image: url('../image/landing.jpg');
+     background-size: cover;
+     background-repeat: no-repeat;
+     background-position: 50% 50%;
  }
 .display {
     text-align: center;
